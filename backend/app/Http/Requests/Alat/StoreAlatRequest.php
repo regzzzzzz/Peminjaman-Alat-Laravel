@@ -4,6 +4,7 @@ namespace App\Http\Requests\Alat;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreAlatRequest extends FormRequest
 {
@@ -20,7 +21,7 @@ class StoreAlatRequest extends FormRequest
             'stok' => ['required', 'integer', 'min:0'],
             'status_kondisi' => ['required', 'string', 'max:255'],
             'deskripsi' => ['nullable', 'string'],
-            'gambar' => ['nullable', 'image', 'nimes:jpeg,png,jpg', 'max:2048'], // maksimal 2 mb
+            'gambar' => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:2048'], // maksimal 2 mb
         ];
     }
     //Opsional: kostumisasi pesan error dalam bahasa Indonesia jika validasi gagal

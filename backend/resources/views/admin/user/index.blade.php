@@ -35,7 +35,7 @@
 
                 {{-- Tombol Tambah User --}}
                 <a href="{{ route('admin.user.create') }}"
-                    class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded-gl transition">
+                    class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded-lg transition">
                     + Tambah User
                 </a>
             </div>

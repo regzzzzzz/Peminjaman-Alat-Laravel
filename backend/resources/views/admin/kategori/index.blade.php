@@ -40,7 +40,7 @@
 
                 <!-- Tombol Tambah -->
                 <a href="{{ route('admin.kategori.create') }}"
-                    class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded-lg transition whitespace-nowrap">
+                    class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-6 py-2 rounded-lg transition whitespace-nowrap">
                     + Tambah Kategori
                 </a>
             </div>
@@ -63,7 +63,7 @@
                             <td class="py-3 px-4 border-b">
                                 <div class="flex items-center space-x-2">
                                     <a href="{{ route('admin.kategori.edit', $kategori->id) }}"
-                                        class="bg-amber-500 hover:bg-amber-600 text-white px-3 py-1.5 rounded text-xs font-semibold transition">
+                                        class="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded text-sm font-semibold transition">
                                         Edit
                                     </a>
 

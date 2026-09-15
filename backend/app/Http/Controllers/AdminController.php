@@ -358,6 +358,9 @@ class AdminController extends Controller
                     'alat_id' => $alatId,
                     'jumlah' => $jumlahPinjam,
                 ]);
+
+                // Kurangi stok di tabel alat sesuai jumlah yang dipinjam
+                $alat->decrement('stok', $jumlahPinjam);
             }
 
             // Kurangi stok alat jika status langsung disetujui/dipinjam (Opsional, atau dikurangi saat status berubah jadi 'dipinjam')

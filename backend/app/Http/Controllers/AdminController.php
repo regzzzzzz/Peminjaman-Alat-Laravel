@@ -7,7 +7,7 @@ use App\Models\Kategori;
 use App\Models\User;
 use App\Models\LogAktivitas;
 use App\Models\Peminjaman;
-use App\Models\DetilPinjam;
+use App\Models\DetailPinjam;
 use App\Models\Pengembalian;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -353,7 +353,7 @@ class AdminController extends Controller
                     throw new \Exception("Stok alat '{$alat->nama_alat}' tidak mencukupi.");
                 }
 
-                DetilPinjam::create([
+                DetailPinjam::create([
                     'peminjaman_id' => $peminjaman->id,
                     'alat_id' => $alatId,
                     'jumlah' => $jumlahPinjam,
@@ -466,7 +466,7 @@ class AdminController extends Controller
         $request->validate([
             'peminjaman_id'   => 'required|exists:peminjaman,id',
             'tgl_kembali' => 'required|date',
-            'kondisi_kembali'    => 'required|string|min:255',
+            'kondisi_kembali'    => 'required|string|max:255',
             'denda_tambahan'     => 'nullable|integer|min:0', // Denda opsional jika ada kerusakan fisik
         ]);
 
@@ -501,8 +501,8 @@ class AdminController extends Controller
                 'petugas_id'      => auth()->id(),
             ]);
 
-            // Ubah status peminjaman menjadi 'dikembalikan' atau 'selesai'
-            $peminjaman->update(['status' => 'selesai']);
+            // Ubah status peminjaman menjadi 'dikembalikan' (sesuai enum di migration)
+            $peminjaman->update(['status' => 'dikembalikan']);
 
             // Kembalikan stok alat ke inventaris
             foreach ($peminjaman->detailPinjams as $detail) {

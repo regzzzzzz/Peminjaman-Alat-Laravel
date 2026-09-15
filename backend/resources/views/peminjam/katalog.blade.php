@@ -13,7 +13,7 @@
                 <a class="navbar-brand" href="#">Panel Peminjam</a>
                 <div class="d-flex">
                     <a href="{{route('peminjam.riwayat') }}" class="btn btn-outline-light btn-sm me-2">Riwayat Pinjam</a>
-                    <form action="{{ route('logout') }}" method="POST" class="ds-inline">
+                    <form action="{{ route('logout') }}" method="POST" class="ds-inline logout-form">
                         @csrf
                         <button type="submit" class="btn btn-light btn-sm text-primary">Logout</button>
                     </form>
@@ -76,5 +76,16 @@
     </div>
 
 </body>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.logout-form').forEach(function (form) {
+            form.addEventListener('submit', function (e) {
+                if (!confirm('Anda yakin ingin logout?')) {
+                    e.preventDefault();
+                }
+            });
+        });
+    });
+</script>
 </html>
 

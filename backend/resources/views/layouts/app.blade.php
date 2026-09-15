@@ -16,7 +16,15 @@
     <aside class="w-64 bg-gray-900 text-white flex flex-col hidden md:flex">
 
         <div class="p-5 text-xl font-bold tracking-wider border-b border-gray-800">
-            PANEL ADMIN
+            @if(auth()->user()->role === 'admin')
+                PANEL ADMIN
+            @elseif(auth()->user()->role === 'petugas')
+                PANEL PETUGAS
+            @elseif(auth()->user()->role === 'peminjam')
+                PANEL PEMINJAM
+            @else
+                PANEL
+            @endif
         </div>
 
         <nav class="flex-1 p-4 space-y-2">
@@ -114,11 +122,23 @@
         <header class="bg-white shadow-sm h-16 flex items-center justify-between px-6 z-10">
 
             <div class="text-lg font-semibold text-gray-800">
-                @yield('header-title', 'Dashboard')
+                @hasSection('header-title')
+                    @yield('header-title')
+                @else
+                    @if(auth()->user()->role === 'admin')
+                        PANEL ADMIN
+                    @elseif(auth()->user()->role === 'petugas')
+                        PANEL PETUGAS
+                    @elseif(auth()->user()->role === 'peminjam')
+                        PANEL PEMINJAM
+                    @else
+                        Dashboard
+                    @endif
+                @endif
             </div>
 
             <div>
-                <form action="{{ route('logout') }}" method="POST">
+                <form action="{{ route('logout') }}" method="POST" class="logout-form">
                     @csrf
 
                     <button type="submit"
@@ -141,4 +161,15 @@
 </div>
 
 </body>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.logout-form').forEach(function (form) {
+            form.addEventListener('submit', function (e) {
+                if (!confirm('Anda yakin ingin logout?')) {
+                    e.preventDefault();
+                }
+            });
+        });
+    });
+</script>
 </html>

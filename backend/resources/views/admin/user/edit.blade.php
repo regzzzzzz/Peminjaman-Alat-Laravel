@@ -31,7 +31,7 @@
         <div class="mb-4">
             <label class="block text-gray-700 text-sm font-semibold mb-2">Role / Hak Akses</label>
             <select name="role" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <option value="peninjau" {{ $user->role == 'peninjau' ? 'selected' : '' }}>Peninjau</option>
+                <option value="peminjam" {{ $user->role == 'peminjam' ? 'selected' : '' }}>Peminjam</option>
                 <option value="petugas" {{ $user->role == 'petugas' ? 'selected' : '' }}>Petugas</option>
                 <option value="admin" {{ $user->role == 'admin' ? 'selected' : '' }}>Admin</option>
             </select>

@@ -17,7 +17,7 @@ class PeminjamanController extends Controller
     public function index(): JsonResponse
     {
         $user = auth()->user();
-        $query = Peminjaman::with(['user', 'detailPinjam.alat', 'pengembalian']);
+        $query = Peminjaman::with(['user', 'detailPinjams.alat', 'pengembalian']);
         if ($user->role === 'peminjam') {
             $query->where('user_id', $user->id);
         }
@@ -56,7 +56,7 @@ class PeminjamanController extends Controller
                 }
 
 
-                return $peminjaman->load(['user', 'detailPinjam.alat']);
+                return $peminjaman->load(['user', 'detailPinjams.alat']);
             });
 
             return response()->json([
@@ -78,7 +78,7 @@ class PeminjamanController extends Controller
 
         return response()->json([
             'message' => 'Detail peminjaman berhasil diambil.',
-            'data' => new PeminjamanResource($peminjaman->load(['user', 'detailPinjam.alat', 'pengembalian']))
+            'data' => new PeminjamanResource($peminjaman->load(['user', 'detailPinjams.alat', 'pengembalian']))
         ]);
     }
 
@@ -102,7 +102,7 @@ class PeminjamanController extends Controller
                     'tgl_kembali_plan' => $request->tgl_kembali_plan,
                 ]);
 
-                $peminjaman->detailPinjam()->delete();
+                $peminjaman->detailPinjams()->delete();
                 foreach ($request->items as $item) {
                     // Ditambahkan lockForUpdate agar konsisten aman dari race condition saat update kata draft
                     $alat = Alat::lockForUpdate()->findOrFail($item['alat_id']);
@@ -121,7 +121,7 @@ class PeminjamanController extends Controller
 
             return response()->json([
                 'message' => 'Data permohonan peminjaman berhasil diperbarui.',
-                'data' => new PeminjamanResource($peminjaman->load(['user', 'detailPinjam.alat']))
+                'data' => new PeminjamanResource($peminjaman->load(['user', 'detailPinjams.alat']))
             ]);
         } catch (Exception $e) {
             return response()->json(['message' => $e->getMessage()], 422);
@@ -141,7 +141,7 @@ class PeminjamanController extends Controller
         }
 
         DB::transaction(function () use ($peminjaman) {
-            $peminjaman->detailPinjam()->delete(); // Hapus child record terlebih dahulu
+            $peminjaman->detailPinjams()->delete(); // Hapus child record terlebih dahulu
             $peminjaman->delete();
         });
 
@@ -162,7 +162,7 @@ class PeminjamanController extends Controller
             DB::transaction(function () use ($peminjaman) {
                 $peminjaman->update(['status' => 'dipinjam']);
 
-                foreach ($peminjaman->detailPinjam as $detail) {
+                foreach ($peminjaman->detailPinjams as $detail) {
                     // Mengunci baris alat demi validasi final sebelum stok dikurangi 
                     $alat = Alat::lockForUpdate()->findOrFail($detail->alat_id);
 
@@ -177,7 +177,7 @@ class PeminjamanController extends Controller
 
             return response()->json([
                 'message' => 'Peminjaman disetujui. Stok alat telah otomatis dikurangi.',
-                'data' => new PeminjamanResource($peminjaman->load(['user', 'detailPinjam.alat']))
+                'data' => new PeminjamanResource($peminjaman->load(['user', 'detailPinjams.alat']))
             ]);
 
         } catch (Exception $e) {
@@ -187,7 +187,7 @@ class PeminjamanController extends Controller
 
     public function riwayat(): JsonResponse 
     {
-        $riwayat = Peminjaman::with(['detailPinjam.alat', 'pengembalian'])
+        $riwayat = Peminjaman::with(['detailPinjams.alat', 'pengembalian'])
             ->where('user_id', auth()->id())
             ->latest()
             ->get();

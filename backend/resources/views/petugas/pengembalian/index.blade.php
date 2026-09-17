@@ -25,13 +25,13 @@
                 <button type="submit" class="bg-gray-900 hover:bg-gray-900 text-white px-4 py-2 text-sm font-semibold rounded-r-lg transition">
                     Cari
                 </button>
-            </form>
             @if(request('search'))
                 <a href="{{ route('petugas.pengembalian.index') }}"
                     class="ml-2 bg-gray-300 hover:bg-gray-400 text-gray-700 px-3 py-2 text-sm rounded-lg flex items-center transition">
                     Reset
                 </a>
             @endif
+            </form>
         </div>
 
         <div class="overflow-x-auto">
@@ -71,7 +71,7 @@
                             </td>
                             <td class="py-3 px-4 border-b text-center">
                                 <!-- Form untuk proses pengembalian -->
-                                <form action="{{ route('petugas.pengembalian.proses', $item->id) }}" method="POST">
+                                <form action="{{ route('petugas.pengembalian.proses', $item->id) }}" method="POST"
                                 class="inline-block bg-gray-50 p-3 rounded border border-gray-200 text-left space-y-2">
                                     @csrf
                                     <div>

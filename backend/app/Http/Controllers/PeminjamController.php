@@ -45,7 +45,7 @@ class PeminjamController extends Controller
             }
 
             DB::commit();
-            return redirect()->route('peminjaman.riwayat')->with('success', 'Pengajuan peminjaman berhasil dikirim.');
+            return redirect()->route('peminjam.riwayat')->with('success', 'Pengajuan peminjaman berhasil dikirim.');
         } catch (\Exception $e) {
             DB::rollback();
             return redirect()->back()->with('error', 'Gagal mengajukan peminjaman: ' . $e->getMessage());

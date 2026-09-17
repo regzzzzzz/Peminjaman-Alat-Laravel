@@ -39,6 +39,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('peminjaman/{peminjaman}', [PeminjamanController::class, 'destroy']);
 
         Route::get('/pengembalian', [PengembalianController::class, 'index']);
+        Route::post('/pengembalian', [PengembalianController::class, 'store']);
         Route::get('/pengembalian/{pengembalian}', [PengembalianController::class, 'show']);
         Route::put('/pengembalian/{pengembalian}', [PengembalianController::class, 'update']);
         Route::delete('/pengembalian/{pengembalian}', [PengembalianController::class, 'destroy']);

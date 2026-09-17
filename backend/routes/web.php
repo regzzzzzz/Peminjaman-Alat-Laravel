@@ -60,26 +60,15 @@ Route::middleware(['auth', 'role:petugas,admin'])->prefix('petugas')->name('petu
     // Peminjaman & Persetujuan
     Route::get('/peminjaman', [PetugasController::class, 'indexPeminjaman'])->name('peminjaman.index');
     Route::post('/peminjaman/{id}/setujui', [PetugasController::class, 'setujuPeminjaman'])->name('peminjaman.setujui');
+    Route::post('/peminjaman/{id}/tolak', [PetugasController::class, 'tolakPeminjaman'])->name('peminjaman.tolak');
 
     // Pengembalian & denda
-    Route::post('/pengembalian/{id}', [PetugasController::class, 'prosesPengembalian'])->name('pengembalian.proses');
     Route::get('/pengembalian', [PetugasController::class, 'indexPengembalian'])->name('pengembalian.index');
+    Route::post('/pengembalian/{id}', [PetugasController::class, 'prosesPengembalian'])->name('pengembalian.proses');
 
-    // Peminjaman $persetujuan 
-    Route::get('/peminjaman', [PetugasController::class, 'indexPeminjaman'])->name('peminjaman.index');
-    Route::get('/peminjaman/{id}/setujui', [PetugasController::class, 'setujuPeminjaman'])->name('peminjaman.setujui');
-    Route::get('/peminjaman/{id}/tolak', [PetugasController::class, 'tolakPeminjaman'])->name('peminjaman.tolak');
-
-     // Kelola Pengembalian
-    Route::get('/pengembalian', [PengembalianController::class, 'index'])->name('pengembalian.index');
-    Route::get('/pengembalian/{id}', [PengembalianController::class, 'show'])->name('pengembalian.show');
-    Route::post('/pengembalian/{id}', [PengembalianController::class, 'store'])->name('pengembalian.store');
-
-    //Laporan
-    Route::get('/laporan', [PetugasController::class, 'Laporan'])->name('laporan.index');  
-    Route::get('/laporan/cetak', [PetugasController::class, 'cetakLaporan'])->name('laporan.cetak');  
-
-
+    // Laporan
+    Route::get('/laporan', [PetugasController::class, 'Laporan'])->name('laporan.index');
+    Route::get('/laporan/cetak', [PetugasController::class, 'cetakLaporan'])->name('laporan.cetak');
 });
 
 //peminjam

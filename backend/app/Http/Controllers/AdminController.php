@@ -473,7 +473,6 @@ class AdminController extends Controller
             'denda_tambahan'     => 'nullable|integer|min:0', // Denda opsional jika ada kerusakan fisik
         ]);
 
-        $peminjaman = Peminjaman::with('detailPinjams')->findOrFail($request->peminjaman_id);
 
         DB::beginTransaction();
         try {
@@ -521,7 +520,35 @@ class AdminController extends Controller
         }
     }
 
-    // 4. Menghapus data pengembalian
+    // 4. Menampilkan form edit pengembalian
+    public function editPengembalian($id)
+    {
+        $pengembalian = Pengembalian::with(['peminjaman.user'])->findOrFail($id);
+
+        return view('admin.pengembalian.edit', compact('pengembalian'));
+    }
+
+    // 5. Memperbarui data pengembalian
+    public function updatePengembalian(Request $request, $id)
+    {
+        $request->validate([
+            'tgl_kembali' => 'required|date',
+            'kondisi_kembali' => 'required|string|max:255',
+            'denda' => 'required|integer|min:0',
+        ]);
+
+        $pengembalian = Pengembalian::findOrFail($id);
+        $pengembalian->update($request->only([
+            'tgl_kembali',
+            'kondisi_kembali',
+            'denda',
+        ]));
+
+        return redirect()->route('admin.pengembalian.index')
+            ->with('success', 'Data pengembalian berhasil diperbarui.');
+    }
+
+    // 6. Menghapus data pengembalian
     public function destroyPengembalian($id)
     {
         $pengembalian = Pengembalian::with('peminjaman.detailPinjams.alat')->findOrFail($id);
@@ -550,6 +577,5 @@ class AdminController extends Controller
     }
 
  }
-
 
 

@@ -19,7 +19,7 @@ class PengembalianController extends Controller
     {
         $user = auth()->user();
 
-        $query = Pengembalian::with(['peminjaman.user', 'peminjaman.detailPinjam.alat', 'petugas']);
+        $query = Pengembalian::with(['peminjaman.user', 'peminjaman.detailPinjams.alat', 'petugas']);
 
         if ($user->role === 'peminjam') {
             $query->whereHas('peminjaman', function ($q) use ($user) {
@@ -40,7 +40,7 @@ class PengembalianController extends Controller
         $user = auth()->user();
 
         // Eager load relasi
-        $pengembalian->load(['peminjaman.user', 'peminjaman.detailPinjam.alat', 'petugas']);
+        $pengembalian->load(['peminjaman.user', 'peminjaman.detailPinjams.alat', 'petugas']);
 
         // Otorisasi privasi
         if ($user->role === 'peminjam' &&
@@ -59,7 +59,7 @@ class PengembalianController extends Controller
         try {
             $pengembalian = DB::transaction(function () use ($request) {
                 // Kunci baris peminjaman ini selama transaksi agar tidak dimanipulasi proses lain
-                $peminjaman = Peminjaman::with('detailPinjam')
+                $peminjaman = Peminjaman::with('detailPinjams')
                     ->lockForUpdate()
                     ->find($request->peminjaman_id);
 
@@ -88,7 +88,7 @@ class PengembalianController extends Controller
                 $peminjaman->update(['status' => $statusPeminjamanBaru]);
 
                 // 3. Kembalikan (tambah) stok alat berdasarkan detail_pinjam
-                foreach ($peminjaman->detailPinjam as $detail) {
+                foreach ($peminjaman->detailPinjams as $detail) {
                     $alat = Alat::lockForUpdate()->find($detail->alat_id);
 
                     // increment() otomatis menambah nilai pada field yang ditentukan
@@ -132,12 +132,12 @@ class PengembalianController extends Controller
     {
         try {
             DB::transaction(function () use ($pengembalian) {
-                $peminjaman = Peminjaman::with('detailPinjam')
+                $peminjaman = Peminjaman::with('detailPinjams')
                     ->lockForUpdate()
                     ->findOrFail($pengembalian->peminjaman_id);
 
                 // Tarik kembali stok ke gudang (karena status kembali dibatalkan, stok berkurang lagi)
-                foreach ($peminjaman->detailPinjam as $detail) {
+                foreach ($peminjaman->detailPinjams as $detail) {
                     $alat = Alat::lockForUpdate()->findOrFail($detail->alat_id);
 
                     if ($alat->stok < $detail->jumlah) {

@@ -15,7 +15,7 @@ class PetugasController extends Controller
     {
         $search = $request->input('search');
 
-        $peminjamans = Peminjaman::with(['user', 'detailPinjam.alat'])
+        $peminjamans = Peminjaman::with(['user', 'detailPinjams.alat'])
             ->where('status', 'diajukan')
             ->when($search, function ($query, $search) {
                 return $query->whereHas('user', function ($q) use ($search) {
@@ -32,11 +32,11 @@ class PetugasController extends Controller
     {
         DB::beginTransaction();
         try {
-            $peminjam = Peminjaman::with('detailPinjam')->findOrFail($id);
+            $peminjam = Peminjaman::with('detailPinjams')->findOrFail($id);
             $peminjam->update(['status' => 'dipinjam']);
 
             // Kurangi stok alat secara otomatis
-            foreach ($peminjam->detailPinjam as $detail) {
+            foreach ($peminjam->detailPinjams as $detail) {
                 $alat = Alat::findOrFail($detail->alat_id);
                 $alat->stok -= $detail->jumlah;
                 $alat->save();
@@ -60,7 +60,7 @@ class PetugasController extends Controller
 
         DB::beginTransaction();
         try {
-            $peminjaman = Peminjaman::with('detailPinjam')->findOrFail($peminjamanId);
+            $peminjaman = Peminjaman::with('detailPinjams')->findOrFail($peminjamanId);
 
             // Simpan data Pengembalian
             Pengembalian::create([
@@ -75,7 +75,7 @@ class PetugasController extends Controller
             $peminjaman->update(['status' => 'dikembalikan']);
 
             // kembalikan stok alat ke inventaris 
-            foreach ($peminjaman->detailPinjam as $detail) {
+            foreach ($peminjaman->detailPinjams as $detail) {
                 $alat = Alat::findOrFail($detail->alat_id);
                 $alat->stok += $detail->jumlah;
                 $alat->save();
@@ -112,7 +112,7 @@ class PetugasController extends Controller
     {
         $search = $request->input('search');
 
-        $peminjamans = Peminjaman::with(['user', 'detailPinjam.alat', 'pengembalian'])
+        $peminjamans = Peminjaman::with(['user', 'detailPinjams.alat', 'pengembalian'])
             ->whereIn('status', ['dipinjam', 'telat'])
             ->when($search, function ($query, $search) {
                 return $query->whereHas('user', function ($q) use ($search) {

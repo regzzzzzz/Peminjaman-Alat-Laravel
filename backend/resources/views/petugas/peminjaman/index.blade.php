@@ -64,13 +64,23 @@
                     </td>
                     <td class="py-3 px-4 border-b text-center">
                         @if($item->status == 'diajukan')
-                            <form action="{{ route('petugas.peminjaman.setujui', $item->id) }}" method="POST">
-                                @csrf
-                                <button type="submit" onclick="return confirm('Setujui peminjaman alat ini?')"
-                                    class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded text-xs font-semibold transition shadow-sm">
-                                    Setujui
-                                </button>
-                            </form>
+                            <div class="flex items-center justify-center gap-2">
+                                <form action="{{ route('petugas.peminjaman.setujui', $item->id) }}" method="POST">
+                                    @csrf
+                                    <button type="submit" onclick="return confirm('Setujui peminjaman alat ini?')"
+                                        class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded text-xs font-semibold transition shadow-sm">
+                                        Setujui
+                                    </button>
+                                </form>
+
+                                <form action="{{ route('petugas.peminjaman.tolak', $item->id) }}" method="POST">
+                                    @csrf
+                                    <button type="submit" onclick="return confirm('Tolak peminjaman alat ini?')"
+                                        class="bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded text-xs font-semibold transition shadow-sm">
+                                        Tolak
+                                    </button>
+                                </form>
+                            </div>
                         @else
                         <span class="text-xs font-semibold text-blue-600 bg-blue-50 px-2.5 py-1 rounded">
                             {{ ucfirst($item->status) }}

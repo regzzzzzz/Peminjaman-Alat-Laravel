@@ -29,7 +29,7 @@ class LaporanController extends Controller
         }
 
         // 2. Eager loading untuk mencegah masalah N+1 Query
-        $query = Peminjaman::with(['user', 'detailPinjam.alat', 'pengembalian.petugas']);
+        $query = Peminjaman::with(['user', 'detailPinjams.alat', 'pengembalian.petugas']);
 
         // Filter: Rentang Tanggal Pinjam
         $query->when($request->filled('start_date') && $request->filled('end_date'), function ($q) use ($request) {

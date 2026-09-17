@@ -103,6 +103,27 @@
 
             @endif
 
+            <!-- MENU PEMINJAM -->
+            @if(auth()->user()->role === 'peminjam')
+
+                <a href="{{ route('peminjam.katalog') }}"
+                    class="block px-4 py-2 rounded-lg transition
+                    {{ request()->routeIs('peminjam.katalog')
+                        ? 'bg-gray-800 text-white font-medium shadow'
+                        : 'text-gray-400 hover:bg-gray-800 hover:text-white' }}">
+                    Katalog
+                </a>
+
+                <a href="{{ route('peminjam.riwayat') }}"
+                    class="block px-4 py-2 rounded-lg transition
+                    {{ request()->routeIs('peminjam.riwayat')
+                        ? 'bg-gray-800 text-white font-medium shadow'
+                        : 'text-gray-400 hover:bg-gray-800 hover:text-white' }}">
+                    Riwayat Peminjam
+                </a>
+
+            @endif
+
         </nav>
 
         <div class="p-4 border-t border-gray-800 text-gray-400">

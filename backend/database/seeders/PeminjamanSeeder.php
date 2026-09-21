@@ -17,13 +17,13 @@ class PeminjamanSeeder extends Seeder
                 'user_id' => 3, // Hafidz Manis (peminjam)
                 'tgl_pinjam' => '2026-06-01',
                 'tgl_kembali_plan' => '2026-06-04',
-                'status' => 'dikembalikan',
+                'status' => 'selesai',
             ],
             [
                 'user_id' => 4, // Handy Bernard (peminjam)
                 'tgl_pinjam' => '2026-06-02',
                 'tgl_kembali_plan' => '2026-06-05',
-                'status' => 'dikembalikan',
+                'status' => 'selesai',
             ],
             [
                 'user_id' => 3, // Rubby Setrum (peminjam)

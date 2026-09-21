@@ -71,8 +71,8 @@ class PetugasController extends Controller
                 'petugas_id' => auth()->id(),
             ]);
 
-            //update status peminjaman jadi dikembalikan
-            $peminjaman->update(['status' => 'dikembalikan']);
+            // Update status peminjaman menjadi selesai.
+            $peminjaman->update(['status' => 'selesai']);
 
             // kembalikan stok alat ke inventaris 
             foreach ($peminjaman->detailPinjams as $detail) {
@@ -94,7 +94,7 @@ class PetugasController extends Controller
     public function tolakPeminjaman($id)
     {
         try {
-            $peminjaman = Peminjam::findOrFail($id);
+            $peminjaman = Peminjaman::findOrFail($id);
 
             // Pastikan statusnya memang masih dianjukan
             if ($peminjaman->status == 'diajukan') {

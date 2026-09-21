@@ -58,7 +58,7 @@
                         @endforeach
                     </ul>
                 </td>
-                <td>Rp {{ number_format($item->denda, 0, ',', '.') }}</td>
+                <td>Rp {{ number_format($item->pengembalian->denda ?? 0, 0, ',', '.') }}</td>
             </tr>
         @empty
             <tr>
@@ -77,4 +77,3 @@
 
     </body>
     </html>
-

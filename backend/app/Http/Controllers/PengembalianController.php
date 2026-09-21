@@ -141,7 +141,7 @@ class PengembalianController extends Controller
              * 3. Ubah status peminjaman
              */
             $peminjaman->update([
-                'status' => 'dikembalikan',
+                'status' => 'selesai',
             ]);
         });
 

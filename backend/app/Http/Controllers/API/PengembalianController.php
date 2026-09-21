@@ -73,7 +73,7 @@ class PengembalianController extends Controller
                 $hariIni = Carbon::now()->startOfDay();
 
                 // Jika hari ini lebih besar dari tanggal rencana kembali, maka telat
-                $statusPeminjamanBaru = $hariIni->greaterThan($tglKembaliPlan) ? 'telat' : 'dikembalikan';
+                $statusPeminjamanBaru = $hariIni->greaterThan($tglKembaliPlan) ? 'telat' : 'selesai';
 
                 // 1. Insert data ke tabel pengembalian
                 $pengembalian = Pengembalian::create([

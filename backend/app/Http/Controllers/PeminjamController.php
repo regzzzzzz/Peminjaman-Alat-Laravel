@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Alat;
 use App\Models\Peminjaman;
+use App\Models\Pengembalian;
 use App\Models\DetailPinjam;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -61,5 +62,50 @@ class PeminjamController extends Controller
             ->get();
 
         return view('peminjam.riwayat', compact('peminjamans'));
+    }
+
+
+public function kembalikanPeminjaman(Request $request, $id)
+    {
+        $peminjaman = Peminjaman::with('detailPinjams.alat')
+            ->where('user_id', auth()->id())
+            ->findOrFail($id);
+
+        if (!in_array($peminjaman->status, ['dipinjam', 'telat'])) {
+            return redirect()->route('peminjam.riwayat')->with('error', 'Peminjaman ini tidak bisa dikembalikan saat ini.');
+        }
+
+        if ($peminjaman->pengembalian()->exists()) {
+            return redirect()->route('peminjam.riwayat')->with('error', 'Alat ini sudah pernah dikembalikan.');
+        }
+
+        DB::beginTransaction();
+
+        try {
+            Pengembalian::create([
+                'peminjaman_id' => $peminjaman->id,
+                'tgl_kembali' => now(),
+                'kondisi_kembali' => 'Belum diperiksa',
+                'denda' => 0,
+                'petugas_id' => auth()->id(),
+            ]);
+
+            foreach ($peminjaman->detailPinjams as $detail) {
+                $alat = $detail->alat;
+                if ($alat) {
+                    $alat->stok += $detail->jumlah;
+                    $alat->save();
+                }
+            }
+
+            $peminjaman->update(['status' => 'selesai']);
+
+            DB::commit();
+
+            return redirect()->route('peminjam.riwayat')->with('success', 'Alat berhasil dikembalikan.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Gagal mengembalikan alat: ' . $e->getMessage());
+        }
     }
 }

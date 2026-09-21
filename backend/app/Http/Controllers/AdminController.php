@@ -379,13 +379,13 @@ class AdminController extends Controller
         $peminjaman = Peminjaman::with('detailPinjams.alat')->findOrFail($id);
 
         $request->validate([
-            'status' => 'required|in:diajukan,dipinjam,selesai,dikembalikan,telat',
+            'status' => 'required|in:diajukan,dipinjam,selesai,telat',
         ]);
 
         DB::beginTransaction();
         try {
             $statusLama = $peminjaman->status;
-            $statusBaru = $request->status === 'selesai' ? 'dikembalikan' : $request->status;
+            $statusBaru = $request->status;
 
             // Logika pengelolaan stok otomatis
             if ($statusLama != 'dipinjam' && $statusBaru == 'dipinjam') {
@@ -397,8 +397,8 @@ class AdminController extends Controller
                     }
                     $alat->decrement('stok', $detail->jumlah);
                 }
-            } elseif ($statusLama == 'dipinjam' && ($statusBaru == 'dikembalikan')) {
-                // Kembalikan stok karena barang sudah dikembalikan
+            } elseif ($statusLama == 'dipinjam' && ($statusBaru == 'selesai')) {
+                // Kembalikan stok karena peminjaman telah selesai.
                 foreach ($peminjaman->detailPinjams as $detail) {
                     $detail->alat->increment('stok', $detail->jumlah);
                 }
@@ -503,8 +503,8 @@ class AdminController extends Controller
                 'petugas_id'      => auth()->id(),
             ]);
 
-            // Ubah status peminjaman menjadi 'dikembalikan' (sesuai enum di migration)
-            $peminjaman->update(['status' => 'dikembalikan']);
+            // Ubah status peminjaman menjadi selesai.
+            $peminjaman->update(['status' => 'selesai']);
 
             // Kembalikan stok alat ke inventaris
             foreach ($peminjaman->detailPinjams as $detail) {
@@ -577,5 +577,4 @@ class AdminController extends Controller
     }
 
  }
-
 

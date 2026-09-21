@@ -40,7 +40,7 @@
                                 <span class="px-2.5 py-1 text-xs font-semibold rounded-full
                                     @if($item->status === 'diajukan') bg-yellow-100 text-yellow-700
                                     @elseif($item->status === 'dipinjam') bg-green-100 text-green-700
-                                    @elseif($item->status === 'dikembalikan') bg-blue-100 text-blue-700
+                                    @elseif($item->status === 'selesai') bg-blue-100 text-blue-700
                                     @elseif($item->status === 'telat') bg-red-100 text-red-700
                                     @else bg-gray-100 text-gray-700
                                     @endif">
@@ -48,7 +48,7 @@
                                 </span>
                             </td>
                             <td class="py-3 px-4 border-b">
-                                <ul class="list-disc list-inside space-y-1 text-xs">
+                                <ul class="list-disc list-inside space-y-2 text-xs">
                                     @foreach($item->detailPinjams as $detail)
                                         <li>
                                             <span class="font-semibold">{{ $detail->alat->nama_alat ?? 'Alat Dihapus' }}</span>
@@ -56,6 +56,17 @@
                                         </li>
                                     @endforeach
                                 </ul>
+
+                                @if(in_array($item->status, ['dipinjam', 'telat']) && !$item->pengembalian()->exists())
+                                    <form action="{{ route('peminjam.peminjaman.kembalikan', $item->id) }}" method="POST" class="mt-3">
+                                        @csrf
+                                        <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold px-3 py-1.5 rounded-md transition">
+                                            Kembalikan
+                                        </button>
+                                    </form>
+                                @elseif($item->pengembalian)
+                                    <p class="mt-2 text-[11px] text-green-600 font-medium">Sudah dikembalikan</p>
+                                @endif
                             </td>
                         </tr>
                     @empty

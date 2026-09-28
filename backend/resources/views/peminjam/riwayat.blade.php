@@ -58,7 +58,10 @@
                                 </ul>
 
                                 @if(in_array($item->status, ['dipinjam', 'telat']) && !$item->pengembalian()->exists())
-                                    <form action="{{ route('peminjam.peminjaman.kembalikan', $item->id) }}" method="POST" class="mt-3">
+                                    <form action="{{ route('peminjam.peminjaman.kembalikan', $item->id) }}"
+                                          method="POST"
+                                          class="mt-3 return-form"
+                                          data-confirm="Apakah Anda yakin ingin mengembalikan alat ini?">
                                         @csrf
                                         <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold px-3 py-1.5 rounded-md transition">
                                             Kembalikan

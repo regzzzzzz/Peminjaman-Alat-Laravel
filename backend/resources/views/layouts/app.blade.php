@@ -191,6 +191,15 @@
                 }
             });
         });
+
+        document.querySelectorAll('[data-confirm]').forEach(function (form) {
+            form.addEventListener('submit', function (e) {
+                const message = form.dataset.confirm || 'Apakah Anda yakin?';
+                if (!confirm(message)) {
+                    e.preventDefault();
+                }
+            });
+        });
     });
 </script>
 </html>

@@ -14,6 +14,45 @@ class PeminjamPengembalianTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function test_peminjam_history_page_shows_return_button_with_confirmation(): void
+    {
+        $peminjam = User::create([
+            'name' => 'Peminjam Uji',
+            'email' => 'peminjam_history@test.com',
+            'password' => bcrypt('password'),
+            'role' => 'peminjam',
+        ]);
+
+        $kategori = Kategori::create(['nama_kategori' => 'Elektronik']);
+
+        $alat = Alat::create([
+            'kategori_id' => $kategori->id,
+            'nama_alat' => 'Laptop',
+            'stok' => 2,
+            'status_kondisi' => 'baik',
+            'deskripsi' => 'Laptop untuk testing',
+        ]);
+
+        $peminjaman = Peminjaman::create([
+            'user_id' => $peminjam->id,
+            'tgl_pinjam' => '2026-09-01',
+            'tgl_kembali_plan' => '2026-09-05',
+            'status' => 'dipinjam',
+        ]);
+
+        DetailPinjam::create([
+            'peminjaman_id' => $peminjaman->id,
+            'alat_id' => $alat->id,
+            'jumlah' => 1,
+        ]);
+
+        $response = $this->actingAs($peminjam)->get(route('peminjam.riwayat'));
+
+        $response->assertOk();
+        $response->assertSee('data-confirm', false);
+        $response->assertSee('Kembalikan', false);
+    }
+
     public function test_peminjam_can_return_borrowed_item(): void
     {
         $this->withoutMiddleware();

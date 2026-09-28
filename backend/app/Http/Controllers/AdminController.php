@@ -195,7 +195,7 @@ class AdminController extends Controller
                     });
             })
             ->latest()
-            ->paginate(10)
+            ->paginate(5)
             ->withQueryString();
 
         return view('admin.alat.index', compact('alats', 'search'));

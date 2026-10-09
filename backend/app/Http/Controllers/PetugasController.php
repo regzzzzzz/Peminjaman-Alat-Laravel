@@ -51,16 +51,16 @@ class PetugasController extends Controller
         }
     }
 
-    public function prosesPengembalian(Request $request, $peminjamanId)
+    public function prosesPengembalian(Request $request, $id)
     {
         $request->validate([
-            'kondisi_alat' => 'required|string',
+            'kondisi_kembali' => 'required|string',
             'denda' => 'nullable|integer', 
         ]);
 
         DB::beginTransaction();
         try {
-            $peminjaman = Peminjaman::with('detailPinjams')->findOrFail($peminjamanId);
+            $peminjaman = Peminjaman::with('detailPinjams')->findOrFail($id);
 
             // Simpan data Pengembalian
             Pengembalian::create([

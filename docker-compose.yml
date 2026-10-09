@@ -21,6 +21,7 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     container_name: laravel-api
+    hostname: laravel-api
     working_dir: /var/www
     user: "${UID}:${GID}"
     ports:

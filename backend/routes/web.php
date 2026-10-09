@@ -21,7 +21,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('/alat', [AdminController::class, 'storeAlat'])->name('alat.store');
     Route::get('/alat/{id}/edit', [AdminController::class, 'editAlat'])->name('alat.edit');
     Route::put('/alat/{id}', [AdminController::class, 'updateAlat'])->name('alat.update');
-    Route::get('/alat/{id}', [AdminController::class, 'destroyAlat'])->name('alat.destroy');
+    Route::delete('/alat/{id}', [AdminController::class, 'destroyAlat'])->name('alat.destroy');
 
     //CRUD User
     Route::get('/users', [AdminController::class, 'indexUser'])->name('user.index');
@@ -72,7 +72,7 @@ Route::middleware(['auth', 'role:petugas,admin'])->prefix('petugas')->name('petu
 });
 
 //peminjam
-Route::middleware(['auth', 'role:peminjam'])->prefix('peminjam')->name('peminjam.')->group(function () {
+Route::middleware(['auth'])->prefix('peminjam')->name('peminjam.')->group(function () {
     // Katalog & Pengajuan
     Route::get('/katalog', [PeminjamController::class, 'katalogAlat'])->name('katalog');
     Route::post('/peminjaman/ajukan', [PeminjamController::class, 'ajukanPeminjaman'])->name('peminjaman.ajukan');

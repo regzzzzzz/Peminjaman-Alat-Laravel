@@ -69,7 +69,7 @@
                                 </span>
                             </td>
                             <td class="py-3 px-4 border-b">{{ $user->no_hp ?? '-' }}</td>
-                            <td class="py-3 px-4 border-b">
+<td class="py-3 px-4 border-b">
                                 <div class="flex items-center space-x-2">
                                     <!-- Tombol Edit -->
                                     <a href="{{ route('admin.user.edit', $user->id) }}"
@@ -77,18 +77,28 @@
                                         Edit
                                     </a>
 
-                                    <!-- Tombol Hapus -->
-                                    <form action="{{ route('admin.user.destroy', $user->id) }}" method="POST"
-                                        onsubmit="return confirm('Yakin ingin menghapus user ini?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit"
-                                            class="bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded text-xs font-semibold transition">
-                                            Hapus
-                                        </button>
-                                    </form>
-                                </div>
+                                    @php
+                                        $isSelf = auth()->id() === $user->id;
+                                        $isAdmin = $user->role === 'admin';
+                                    @endphp
 
+                                    @if(!$isSelf && !$isAdmin)
+                                        <!-- Tombol Hapus -->
+                                        <form action="{{ route('admin.user.destroy', $user->id) }}" method="POST"
+                                            onsubmit="return confirm('Yakin ingin menghapus user ini?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                class="bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded text-xs font-semibold transition">
+                                                Hapus
+                                            </button>
+                                        </form>
+                                    @else
+                                        <span class="text-gray-400 text-xs px-3 py-1.5" title="{{ $isSelf ? 'Tidak bisa menghapus diri sendiri' : 'Admin tidak bisa dihapus' }}">
+                                            {{ $isSelf ? 'Diri Sendiri' : 'Admin' }}
+                                        </span>
+                                    @endif
+                                </div>
                             </td>
                         </tr>
                     @empty
